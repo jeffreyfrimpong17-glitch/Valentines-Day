@@ -250,6 +250,13 @@
                 inset 0 0 80px rgba(10,5,20,0.8);
             cursor: pointer;
             margin: 0 auto;
+            transition: box-shadow 0.8s ease;
+        }
+        .constellation-orb.complete {
+            box-shadow:
+                0 0 80px rgba(255,77,109,0.4),
+                0 0 160px rgba(255,77,109,0.2),
+                inset 0 0 80px rgba(10,5,20,0.6);
         }
         .constellation-orb canvas {
             width: 100%;
@@ -264,9 +271,39 @@
             background: radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.06) 0%, transparent 50%);
             pointer-events: none;
         }
+        .constellation-progress-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            opacity: 0;
+            animation: fadeSlideUp 1s ease 2s forwards;
+        }
+        .constellation-progress-bar {
+            width: 120px;
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .constellation-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--rose), var(--rose-light));
+            border-radius: 2px;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .constellation-progress-text {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 0.1em;
+            font-weight: 300;
+            min-width: 70px;
+        }
         .constellation-label {
             text-align: center;
-            margin-top: 16px;
+            margin-top: 12px;
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.1rem;
             font-style: italic;
@@ -284,41 +321,101 @@
             animation: fadeSlideUp 1s ease 3s forwards;
             letter-spacing: 0.12em;
             font-weight: 300;
+            transition: opacity 0.5s ease;
         }
-        .constellation-memory {
+        .constellation-adjective-popup {
             position: absolute;
-            bottom: -10px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            font-weight: 600;
+            color: var(--rose-light);
+            opacity: 0;
+            pointer-events: none;
+            text-shadow: 0 0 30px rgba(255,77,109,0.6), 0 0 60px rgba(255,77,109,0.3);
+            z-index: 20;
+            white-space: nowrap;
+        }
+        @keyframes adjectivePop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+            40% { transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -60%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -80%) scale(0.9); }
+        }
+        .constellation-adjective-popup.show {
+            animation: adjectivePop 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .constellation-reveal {
+            position: absolute;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 320px;
-            background: rgba(13, 10, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(201,24,74,0.2);
-            border-radius: 16px;
-            padding: 20px 24px;
+            width: 360px;
             text-align: center;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 10;
+            transition: opacity 1s ease 0.5s;
+            z-index: 25;
+            padding-top: 380px;
         }
-        .constellation-memory.visible {
+        .constellation-reveal.visible {
             opacity: 1;
-            bottom: -120px;
             pointer-events: auto;
         }
-        .constellation-memory-title {
+        .constellation-reveal-heart {
+            font-size: 2.5rem;
+            color: var(--rose);
+            margin-bottom: 12px;
+            animation: heartFloat 2s ease-in-out infinite;
+        }
+        .constellation-reveal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--rose-light);
+            margin-bottom: 18px;
+            letter-spacing: 0.05em;
+        }
+        .constellation-reveal-words {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .reveal-word {
+            background: linear-gradient(135deg, rgba(201,24,74,0.15), rgba(255,117,143,0.1));
+            border: 1px solid rgba(255,77,109,0.2);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--rose-light);
+            opacity: 0;
+            transform: translateY(10px) scale(0.8);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .reveal-word.pop {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .constellation-reveal-msg {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.15rem;
-            font-weight: 500;
-            color: var(--rose-light);
-            margin-bottom: 6px;
+            font-style: italic;
+            color: rgba(255,255,255,0.6);
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
-        .constellation-memory-text {
-            font-size: 0.88rem;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.7);
-            font-weight: 300;
+        .constellation-reveal.visible .constellation-reveal-msg {
+            opacity: 1;
+            transition-delay: 3s;
         }
         .scroll-hint {
             position: absolute;
@@ -1090,11 +1187,18 @@
                 <div class="constellation-orb" id="constellationOrb">
                     <canvas id="heartConstellation" width="680" height="680"></canvas>
                 </div>
-                <div class="constellation-label">Our constellation of memories</div>
-                <div class="constellation-hint">tap a star to reveal a memory</div>
-                <div class="constellation-memory" id="constellationMemory">
-                    <div class="constellation-memory-title" id="memoryTitle"></div>
-                    <div class="constellation-memory-text" id="memoryText"></div>
+                <div class="constellation-progress-wrap">
+                    <div class="constellation-progress-bar"><div class="constellation-progress-fill" id="constellationProgressFill"></div></div>
+                    <div class="constellation-progress-text" id="constellationProgressText">0 / 14 stars</div>
+                </div>
+                <div class="constellation-label">Connect the stars to reveal a heart</div>
+                <div class="constellation-hint" id="constellationHint">tap each star to draw the next line</div>
+                <div class="constellation-adjective-popup" id="adjectivePopup"></div>
+                <div class="constellation-reveal" id="constellationReveal">
+                    <div class="constellation-reveal-heart">&#10084;</div>
+                    <div class="constellation-reveal-title">Andrea, you are...</div>
+                    <div class="constellation-reveal-words" id="revealWords"></div>
+                    <div class="constellation-reveal-msg">Every star in my sky is you.</div>
                 </div>
             </div>
             <div id="ytPlayerContainer" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
@@ -1590,58 +1694,87 @@
         (function() {
             const canvas = document.getElementById('heartConstellation');
             const orb = document.getElementById('constellationOrb');
-            const memoryBox = document.getElementById('constellationMemory');
-            const memoryTitle = document.getElementById('memoryTitle');
-            const memoryText = document.getElementById('memoryText');
+            const progressFill = document.getElementById('constellationProgressFill');
+            const progressText = document.getElementById('constellationProgressText');
+            const hintEl = document.getElementById('constellationHint');
+            const adjectivePopup = document.getElementById('adjectivePopup');
+            const revealPanel = document.getElementById('constellationReveal');
+            const revealWords = document.getElementById('revealWords');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const W = canvas.width, H = canvas.height;
             const cx = W / 2, cy = H / 2;
 
-            // 12 memories — each one is a star
-            const memories = [
-                { label: 'The Wedding', text: "My boy's wedding. I wasn't looking for anything. Then I saw you, and the whole room got quieter." },
-                { label: 'First Conversations', text: 'Hours turning into late nights, late nights turning into "I should probably go" but neither of us moving.' },
-                { label: 'Your Mom\'s House', text: 'Your room became our world. That\'s where I fell for you — right there in that space that was just ours.' },
-                { label: 'First Trip Together', text: 'Ghana, December 2025. The motherland. Everything hit different with you next to me.' },
-                { label: 'Your First Place', text: 'Summer 2025. I watched you sign that lease and grab those keys. Your independence. Still proud.' },
-                { label: 'Late Night Talks', text: 'Conversations that go on for hours and still feel too short. That\'s where we really live.' },
-                { label: 'Our First Dance', text: 'The way you moved, the way you laughed — I knew right there I\'d remember this forever.' },
-                { label: 'Through The Storm', text: 'Every rough patch taught me something. Every time we came back to each other, we came back stronger.' },
-                { label: 'Cooking Together', text: 'Home-cooked meals that taste like love. Every single beautiful, ordinary, extraordinary moment.' },
-                { label: 'Moving In', text: 'We live together. Dance together. Argue. Make up. Love harder than I knew I could. This is it.' },
-                { label: 'Seeing You Shine', text: 'Watching you balance your master\'s and Latham. You don\'t just dream — you go get it.' },
-                { label: 'Right Now', text: "This moment. Reading this. You and me. The real thing. Messy, beautiful, ours." }
+            // 14 adjectives describing Andrea — each is a star
+            const starWords = [
+                { word: 'Beautiful', note: 'The kind of beauty that makes a room feel warmer just because you walked in.' },
+                { word: 'Brilliant', note: 'A mind that never stops growing. Latham & your masters? You make hard look effortless.' },
+                { word: 'Compassionate', note: 'You feel for people in a way that makes everyone around you feel safe.' },
+                { word: 'Fearless', note: 'You chase your dreams like they owe you something. That courage? Unmatched.' },
+                { word: 'Radiant', note: 'Your smile lights up every room. Every single one.' },
+                { word: 'Inspiring', note: 'You push me to be better just by being you. I hope you know that.' },
+                { word: 'Graceful', note: 'The way you move through life, through challenges, through love — always with grace.' },
+                { word: 'Resilient', note: 'You bend but you never break. You come back stronger every time.' },
+                { word: 'Captivating', note: 'From the very first moment I saw you, I could not look away.' },
+                { word: 'Extraordinary', note: 'There is nothing ordinary about the way you love, dream, or live.' },
+                { word: 'Magnetic', note: 'People are drawn to your energy. I was the lucky one who got to stay.' },
+                { word: 'Passionate', note: 'Everything you do, you do with your whole heart. That fire? It is my favourite thing.' },
+                { word: 'Irreplaceable', note: 'There is only one you in this universe. And she is mine.' },
+                { word: 'My Everything', note: 'Not just a word. A fact. You are every star in my sky.' }
             ];
+            const STAR_COUNT = starWords.length;
 
-            // Place 12 stars in a heart shape
-            const memoryStars = [];
-            const heartAngles = [];
-            for (let i = 0; i < 12; i++) {
-                const t = (i / 12) * Math.PI * 2;
-                heartAngles.push(t);
-            }
-            heartAngles.forEach((t, i) => {
-                const scale = 11.5;
-                const x = 16 * Math.pow(Math.sin(t), 3);
-                const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-                memoryStars.push({
-                    x: cx + x * scale,
-                    y: cy + y * scale - 15,
-                    baseR: 5,
-                    r: 5,
+            // Place stars along a heart curve
+            const heartStars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                const t = (i / STAR_COUNT) * Math.PI * 2;
+                const scale = 11;
+                const hx = 16 * Math.pow(Math.sin(t), 3);
+                const hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                heartStars.push({
+                    x: cx + hx * scale,
+                    y: cy + hy * scale - 10,
+                    baseR: 4.5,
                     phase: Math.random() * Math.PI * 2,
-                    speed: 0.015 + Math.random() * 0.01,
-                    active: false,
-                    revealProgress: 0,
+                    speed: 0.012 + Math.random() * 0.01,
+                    clicked: false,
+                    clickOrder: -1,
+                    pulseAnim: 0,
                     index: i
                 });
-            });
+            }
+
+            // Track click order — the NEXT star to click is always the one
+            // that continues the heart outline from where you left off
+            let clickSequence = []; // indices in the order the user SHOULD click
+            // The "correct" order is simply 0,1,2,...,13 (around the heart)
+            // But we let the user click ANY unclicked star — and the line connects
+            // from the last clicked to the one they click now.
+            let clickedOrder = []; // actual order the user clicked
+            let heartComplete = false;
+            let hoverStar = -1;
+            let completionGlow = 0;
+
+            // Particles that burst from a clicked star
+            const particles = [];
+            function burstParticles(x, y) {
+                for (let i = 0; i < 18; i++) {
+                    const angle = (i / 18) * Math.PI * 2 + Math.random() * 0.3;
+                    const speed = 2 + Math.random() * 3;
+                    particles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1,
+                        decay: 0.02 + Math.random() * 0.015,
+                        size: 1.5 + Math.random() * 2
+                    });
+                }
+            }
 
             // Twinkling background stars
             const bgStars = [];
-            for (let i = 0; i < 120; i++) {
-                // Place in circular area
+            for (let i = 0; i < 140; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const dist = Math.random() * (W / 2 - 10);
                 bgStars.push({
@@ -1658,7 +1791,7 @@
             const shootingStars = [];
             function spawnShootingStar() {
                 const startAngle = Math.random() * Math.PI * 2;
-                const startDist = W * 0.35;
+                const startDist = W * 0.38;
                 shootingStars.push({
                     x: cx + Math.cos(startAngle) * startDist,
                     y: cy + Math.sin(startAngle) * startDist,
@@ -1670,24 +1803,15 @@
                 });
             }
 
-            // Constellation lines connecting adjacent memory stars
-            function getLineOrder() {
-                // Connect in heart order
-                const order = [];
-                for (let i = 0; i < memoryStars.length; i++) order.push(i);
-                return order;
-            }
-            const lineOrder = getLineOrder();
+            // Line animation state — each line animates from 0 to 1
+            const lineAnims = []; // { from, to, progress }
 
             let constellationStarted = false;
-            let revealProgress = 0; // 0 to 1 for the line drawing animation
-            let selectedStar = -1;
-            let hoverStar = -1;
 
             function drawFrame() {
                 ctx.clearRect(0, 0, W, H);
 
-                // Background twinkling stars
+                // Background twinkling
                 bgStars.forEach(s => {
                     const twinkle = s.brightness * (0.4 + 0.6 * Math.abs(Math.sin(s.phase)));
                     s.phase += s.speed;
@@ -1700,103 +1824,146 @@
                 // Shooting stars
                 for (let i = shootingStars.length - 1; i >= 0; i--) {
                     const ss = shootingStars[i];
-                    ss.x += ss.vx;
-                    ss.y += ss.vy;
-                    ss.life -= ss.decay;
+                    ss.x += ss.vx; ss.y += ss.vy; ss.life -= ss.decay;
                     if (ss.life <= 0) { shootingStars.splice(i, 1); continue; }
                     const tailX = ss.x - ss.vx * ss.length / 3;
                     const tailY = ss.y - ss.vy * ss.length / 3;
                     const grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
                     grad.addColorStop(0, 'rgba(255,255,255,0)');
                     grad.addColorStop(1, `rgba(255,255,255,${ss.life * 0.8})`);
-                    ctx.beginPath();
-                    ctx.moveTo(tailX, tailY);
-                    ctx.lineTo(ss.x, ss.y);
-                    ctx.strokeStyle = grad;
-                    ctx.lineWidth = 1.5;
+                    ctx.beginPath(); ctx.moveTo(tailX, tailY); ctx.lineTo(ss.x, ss.y);
+                    ctx.strokeStyle = grad; ctx.lineWidth = 1.5; ctx.stroke();
+                    ctx.beginPath(); ctx.arc(ss.x, ss.y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${ss.life})`; ctx.fill();
+                }
+
+                // Animated constellation lines
+                lineAnims.forEach(ln => {
+                    if (ln.progress < 1) ln.progress = Math.min(1, ln.progress + 0.04);
+                    const a = heartStars[ln.from], b = heartStars[ln.to];
+                    const ex = a.x + (b.x - a.x) * ln.progress;
+                    const ey = a.y + (b.y - a.y) * ln.progress;
+                    // Glow line
+                    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(ex, ey);
+                    ctx.strokeStyle = heartComplete
+                        ? `rgba(255, 77, 109, ${0.25 + 0.15 * Math.sin(completionGlow)})`
+                        : 'rgba(255, 77, 109, 0.35)';
+                    ctx.lineWidth = heartComplete ? 2 : 1.5;
+                    ctx.shadowColor = 'rgba(255, 77, 109, 0.4)'; ctx.shadowBlur = 8;
                     ctx.stroke();
-                    // Head glow
+                    ctx.shadowBlur = 0;
+                });
+
+                // Closing line when heart is complete (last star → first star)
+                if (heartComplete) {
+                    completionGlow += 0.03;
+                    const first = heartStars[clickedOrder[0]];
+                    const last = heartStars[clickedOrder[clickedOrder.length - 1]];
+                    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(first.x, first.y);
+                    ctx.strokeStyle = `rgba(255, 77, 109, ${0.25 + 0.15 * Math.sin(completionGlow)})`;
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = 'rgba(255, 77, 109, 0.4)'; ctx.shadowBlur = 8;
+                    ctx.stroke(); ctx.shadowBlur = 0;
+
+                    // Pulsing heart fill (very subtle)
                     ctx.beginPath();
-                    ctx.arc(ss.x, ss.y, 2, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255,255,255,${ss.life})`;
+                    for (let i = 0; i <= 100; i++) {
+                        const t = (i / 100) * Math.PI * 2;
+                        const sc = 11;
+                        const hx = cx + 16 * Math.pow(Math.sin(t), 3) * sc;
+                        const hy = cy + (-(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t))) * sc - 10;
+                        if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+                    }
+                    ctx.closePath();
+                    ctx.fillStyle = `rgba(255, 77, 109, ${0.03 + 0.02 * Math.sin(completionGlow * 1.5)})`;
                     ctx.fill();
                 }
 
-                // Number of visible memory stars
-                const visibleCount = Math.min(memoryStars.length, Math.floor(revealProgress * (memoryStars.length + 1)));
-
-                // Constellation lines (faint, connecting in heart order)
-                if (visibleCount > 1) {
-                    for (let i = 0; i < visibleCount - 1; i++) {
-                        const a = memoryStars[lineOrder[i]];
-                        const b = memoryStars[lineOrder[i + 1]];
-                        ctx.beginPath();
-                        ctx.moveTo(a.x, a.y);
-                        ctx.lineTo(b.x, b.y);
-                        ctx.strokeStyle = 'rgba(255, 77, 109, 0.15)';
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                    }
-                    // Close the heart if all revealed
-                    if (visibleCount >= memoryStars.length) {
-                        const first = memoryStars[lineOrder[0]];
-                        const last = memoryStars[lineOrder[lineOrder.length - 1]];
-                        ctx.beginPath();
-                        ctx.moveTo(last.x, last.y);
-                        ctx.lineTo(first.x, first.y);
-                        ctx.strokeStyle = 'rgba(255, 77, 109, 0.15)';
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                    }
+                // Particles
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy;
+                    p.vx *= 0.96; p.vy *= 0.96;
+                    p.life -= p.decay;
+                    if (p.life <= 0) { particles.splice(i, 1); continue; }
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 180, 200, ${p.life * 0.8})`;
+                    ctx.fill();
                 }
 
-                // Memory stars (the 12 big interactive ones)
-                for (let i = 0; i < visibleCount; i++) {
-                    const s = memoryStars[i];
-                    const twinkle = 0.6 + 0.4 * Math.abs(Math.sin(s.phase));
+                // Heart stars
+                heartStars.forEach((s, i) => {
                     s.phase += s.speed;
-                    const isHovered = hoverStar === i;
-                    const isSelected = selectedStar === i;
-                    const glowSize = isSelected ? 28 : (isHovered ? 22 : 16);
-                    const coreSize = isSelected ? 6 : (isHovered ? 5.5 : s.baseR);
-                    const glowAlpha = isSelected ? 0.5 : (isHovered ? 0.35 : twinkle * 0.2);
+                    const twinkle = 0.6 + 0.4 * Math.abs(Math.sin(s.phase));
+                    const isHovered = hoverStar === i && !s.clicked && !heartComplete;
+                    const isClicked = s.clicked;
+
+                    // Pulse animation on click
+                    if (s.pulseAnim > 0) s.pulseAnim = Math.max(0, s.pulseAnim - 0.02);
+
+                    const pulseExtra = s.pulseAnim * 12;
+                    const glowSize = isClicked ? (20 + pulseExtra) : (isHovered ? 20 : 14);
+                    const coreSize = isClicked ? (5.5 + pulseExtra * 0.3) : (isHovered ? 5 : s.baseR);
+
+                    // Next-to-click hint: gentle pulse on the "suggested" next star
+                    const isNextSuggested = !heartComplete && clickedOrder.length > 0 && !s.clicked && i === getNextSuggested();
+                    const suggestPulse = isNextSuggested ? 0.15 + 0.1 * Math.sin(s.phase * 3) : 0;
+
+                    const glowAlpha = isClicked ? 0.55 : (isHovered ? 0.4 : (twinkle * 0.2 + suggestPulse));
 
                     // Outer glow
+                    const roseR = isClicked ? 255 : 255;
+                    const roseG = isClicked ? 77 : (isNextSuggested ? 140 : 200);
+                    const roseB = isClicked ? 109 : (isNextSuggested ? 180 : 230);
                     const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glowSize);
-                    grad.addColorStop(0, `rgba(255, 77, 109, ${glowAlpha})`);
-                    grad.addColorStop(0.5, `rgba(255, 117, 143, ${glowAlpha * 0.4})`);
-                    grad.addColorStop(1, 'rgba(255, 77, 109, 0)');
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, glowSize, 0, Math.PI * 2);
-                    ctx.fillStyle = grad;
+                    grad.addColorStop(0, `rgba(${roseR}, ${roseG}, ${roseB}, ${glowAlpha})`);
+                    grad.addColorStop(0.5, `rgba(${roseR}, ${roseG}, ${roseB}, ${glowAlpha * 0.3})`);
+                    grad.addColorStop(1, `rgba(${roseR}, ${roseG}, ${roseB}, 0)`);
+                    ctx.beginPath(); ctx.arc(s.x, s.y, glowSize, 0, Math.PI * 2);
+                    ctx.fillStyle = grad; ctx.fill();
+
+                    // Core
+                    ctx.beginPath(); ctx.arc(s.x, s.y, coreSize, 0, Math.PI * 2);
+                    if (isClicked) {
+                        ctx.fillStyle = '#fff';
+                    } else {
+                        ctx.fillStyle = `rgba(255, 230, 240, ${twinkle})`;
+                    }
                     ctx.fill();
 
-                    // Star core
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, coreSize, 0, Math.PI * 2);
-                    ctx.fillStyle = isSelected ? '#fff' : `rgba(255, 230, 235, ${twinkle})`;
-                    ctx.fill();
-
-                    // Cross sparkle on selected
-                    if (isSelected) {
-                        ctx.strokeStyle = `rgba(255,255,255,${twinkle * 0.6})`;
+                    // Cross sparkle on clicked stars
+                    if (isClicked) {
+                        const sparkleLen = 8 + pulseExtra * 0.5;
+                        ctx.strokeStyle = `rgba(255,255,255,${twinkle * 0.5})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
-                        ctx.moveTo(s.x - 10, s.y);
-                        ctx.lineTo(s.x + 10, s.y);
-                        ctx.moveTo(s.x, s.y - 10);
-                        ctx.lineTo(s.x, s.y + 10);
+                        ctx.moveTo(s.x - sparkleLen, s.y); ctx.lineTo(s.x + sparkleLen, s.y);
+                        ctx.moveTo(s.x, s.y - sparkleLen); ctx.lineTo(s.x, s.y + sparkleLen);
                         ctx.stroke();
                     }
-                }
 
-                // Animate reveal
-                if (constellationStarted && revealProgress < 1) {
-                    revealProgress += 0.006;
-                    if (revealProgress > 1) revealProgress = 1;
-                }
+                    // Small number label for clicked stars
+                    if (isClicked && !heartComplete) {
+                        ctx.font = '600 18px "Cormorant Garamond", serif';
+                        ctx.fillStyle = `rgba(255, 200, 215, ${twinkle * 0.5})`;
+                        ctx.textAlign = 'center';
+                        ctx.fillText(s.clickOrder + 1, s.x, s.y - 14);
+                    }
+                });
 
                 requestAnimationFrame(drawFrame);
+            }
+
+            // Determine the "suggested" next star (nearest unclicked neighbor in heart order)
+            function getNextSuggested() {
+                if (clickedOrder.length === 0) return -1;
+                const last = clickedOrder[clickedOrder.length - 1];
+                // Try next in heart order, then wrap
+                for (let offset = 1; offset < STAR_COUNT; offset++) {
+                    const candidate = (last + offset) % STAR_COUNT;
+                    if (!heartStars[candidate].clicked) return candidate;
+                }
+                return -1;
             }
 
             // Shooting star interval
@@ -1804,54 +1971,107 @@
                 if (constellationStarted && Math.random() > 0.3) spawnShootingStar();
             }, 2500);
 
-            // Hit detection for memory stars
+            // Hit detection
             function getStarAtPos(px, py) {
                 const rect = canvas.getBoundingClientRect();
-                const scaleX = W / rect.width;
-                const scaleY = H / rect.height;
+                const scaleX = W / rect.width, scaleY = H / rect.height;
                 const x = (px - rect.left) * scaleX;
                 const y = (py - rect.top) * scaleY;
-                const visibleCount = Math.min(memoryStars.length, Math.floor(revealProgress * (memoryStars.length + 1)));
-                for (let i = visibleCount - 1; i >= 0; i--) {
-                    const s = memoryStars[i];
+                for (let i = heartStars.length - 1; i >= 0; i--) {
+                    const s = heartStars[i];
                     const dx = x - s.x, dy = y - s.y;
-                    if (dx * dx + dy * dy < 600) return i; // ~24px hit radius
+                    if (dx * dx + dy * dy < 700) return i;
                 }
                 return -1;
             }
 
+            function showAdjectivePopup(word) {
+                adjectivePopup.textContent = word;
+                adjectivePopup.classList.remove('show');
+                void adjectivePopup.offsetWidth; // force reflow
+                adjectivePopup.classList.add('show');
+            }
+
+            function updateProgress() {
+                const count = clickedOrder.length;
+                progressFill.style.width = (count / STAR_COUNT * 100) + '%';
+                progressText.textContent = count + ' / ' + STAR_COUNT + ' stars';
+            }
+
+            function handleStarClick(starIndex) {
+                if (heartComplete) return;
+                const star = heartStars[starIndex];
+                if (star.clicked) return; // already clicked
+
+                // Mark clicked
+                star.clicked = true;
+                star.pulseAnim = 1;
+                star.clickOrder = clickedOrder.length;
+                clickedOrder.push(starIndex);
+
+                // Burst particles
+                burstParticles(star.x, star.y);
+
+                // Draw line from previous star
+                if (clickedOrder.length > 1) {
+                    const prevIndex = clickedOrder[clickedOrder.length - 2];
+                    lineAnims.push({ from: prevIndex, to: starIndex, progress: 0 });
+                }
+
+                // Show adjective popup
+                showAdjectivePopup(starWords[starIndex].word);
+
+                // Update progress
+                updateProgress();
+
+                // Update hint text
+                if (clickedOrder.length === 1) {
+                    hintEl.textContent = 'beautiful! keep going...';
+                } else if (clickedOrder.length === Math.floor(STAR_COUNT / 2)) {
+                    hintEl.textContent = 'the heart is forming...';
+                } else if (clickedOrder.length === STAR_COUNT - 1) {
+                    hintEl.textContent = 'one more star...';
+                }
+
+                // Check completion
+                if (clickedOrder.length === STAR_COUNT) {
+                    heartComplete = true;
+                    orb.classList.add('complete');
+                    hintEl.style.opacity = '0';
+                    // Trigger the big reveal after a short pause
+                    setTimeout(triggerReveal, 1200);
+                }
+            }
+
+            function triggerReveal() {
+                revealPanel.classList.add('visible');
+                // Populate and stagger-animate the word pills
+                revealWords.innerHTML = '';
+                starWords.forEach((sw, i) => {
+                    const pill = document.createElement('span');
+                    pill.className = 'reveal-word';
+                    pill.textContent = sw.word;
+                    pill.title = sw.note;
+                    revealWords.appendChild(pill);
+                    setTimeout(() => pill.classList.add('pop'), 150 * i);
+                });
+            }
+
             canvas.addEventListener('mousemove', (e) => {
+                if (heartComplete) { canvas.style.cursor = 'default'; return; }
                 hoverStar = getStarAtPos(e.clientX, e.clientY);
-                canvas.style.cursor = hoverStar >= 0 ? 'pointer' : 'default';
+                canvas.style.cursor = hoverStar >= 0 && !heartStars[hoverStar].clicked ? 'pointer' : 'default';
             });
 
             canvas.addEventListener('click', (e) => {
                 const hit = getStarAtPos(e.clientX, e.clientY);
-                if (hit >= 0) {
-                    selectedStar = hit;
-                    memoryTitle.textContent = memories[hit].label;
-                    memoryText.textContent = memories[hit].text;
-                    memoryBox.classList.add('visible');
-                } else {
-                    selectedStar = -1;
-                    memoryBox.classList.remove('visible');
-                }
+                if (hit >= 0) handleStarClick(hit);
             });
 
-            // Touch support
             canvas.addEventListener('touchstart', (e) => {
                 const touch = e.touches[0];
                 const hit = getStarAtPos(touch.clientX, touch.clientY);
-                if (hit >= 0) {
-                    e.preventDefault();
-                    selectedStar = hit;
-                    memoryTitle.textContent = memories[hit].label;
-                    memoryText.textContent = memories[hit].text;
-                    memoryBox.classList.add('visible');
-                } else {
-                    selectedStar = -1;
-                    memoryBox.classList.remove('visible');
-                }
+                if (hit >= 0) { e.preventDefault(); handleStarClick(hit); }
             }, { passive: false });
 
             // Start when visible
