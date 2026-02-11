@@ -231,63 +231,29 @@
             0%,100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
         }
-        .voice-memo {
+        .constellation-container {
             margin-top: 40px;
-            padding: 20px 32px;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(201,24,74,0.15);
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 300px;
+            height: 300px;
+            position: relative;
             opacity: 0;
             animation: fadeSlideUp 1s ease 1.5s forwards;
         }
-        .voice-memo:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,24,74,0.15); }
-        .voice-memo-btn {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--rose), var(--rose-light));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .constellation-container canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
-        .voice-memo-btn svg { fill: #fff; width: 18px; height: 18px; margin-left: 3px; }
-        .voice-memo-label {
-            font-size: 0.9rem;
-            color: var(--soft-text);
-            font-weight: 300;
-        }
-        .voice-memo-bars {
-            display: flex;
-            gap: 3px;
-            align-items: center;
-            height: 24px;
-        }
-        .voice-memo-bars span {
-            width: 3px;
-            background: var(--rose);
-            border-radius: 2px;
-            animation: barIdle 1.5s ease-in-out infinite;
-        }
-        .voice-memo-bars span:nth-child(1) { height: 8px; animation-delay: 0s; }
-        .voice-memo-bars span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
-        .voice-memo-bars span:nth-child(3) { height: 20px; animation-delay: 0.3s; }
-        .voice-memo-bars span:nth-child(4) { height: 12px; animation-delay: 0.45s; }
-        .voice-memo-bars span:nth-child(5) { height: 16px; animation-delay: 0.6s; }
-        .voice-memo-bars.playing span { animation: barPlay 0.5s ease-in-out infinite alternate; }
-        @keyframes barIdle {
-            0%,100% { transform: scaleY(1); }
-            50% { transform: scaleY(0.5); }
-        }
-        @keyframes barPlay {
-            from { transform: scaleY(0.3); }
-            to { transform: scaleY(1); }
+        .constellation-label {
+            text-align: center;
+            margin-top: 12px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--rose);
+            opacity: 0;
+            animation: fadeSlideUp 1s ease 2.5s forwards;
+            letter-spacing: 0.05em;
         }
         .scroll-hint {
             position: absolute;
@@ -467,37 +433,141 @@
             opacity: 0.85;
         }
         .reasons-section { padding: 80px 0; }
-        .reasons-grid { display: grid; gap: 20px; max-width: 700px; margin: 0 auto; }
-        .reason-card {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(201,24,74,0.08);
-            border-radius: 18px;
-            padding: 28px 32px;
-            display: flex;
-            align-items: flex-start;
-            gap: 18px;
-            opacity: 0;
-            transform: translateY(24px);
-            transition: all 0.6s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        .jar-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
         }
-        .reason-card.visible { opacity: 1; transform: translateY(0); }
-        .reason-card:hover { box-shadow: 0 8px 40px rgba(201,24,74,0.12); transform: translateY(-3px) !important; }
-        .reason-number {
+        .jar-wrapper {
+            position: relative;
+            width: 280px;
+            height: 380px;
+            margin: 0 auto 30px;
+            cursor: pointer;
+        }
+        .jar-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 10px 40px rgba(201,24,74,0.12));
+        }
+        .jar-papers {
+            position: absolute;
+            top: 80px;
+            left: 50px;
+            right: 50px;
+            bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px;
+            overflow: hidden;
+        }
+        .jar-paper {
+            width: 28px;
+            height: 18px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: paperFloat 3s ease-in-out infinite;
+        }
+        .jar-paper:nth-child(odd) { animation-delay: -1.5s; }
+        .jar-paper:nth-child(3n) { transform: rotate(-8deg); }
+        .jar-paper:nth-child(3n+1) { transform: rotate(5deg); }
+        .jar-paper:nth-child(3n+2) { transform: rotate(-3deg); }
+        .jar-paper:hover { transform: scale(1.3) rotate(0deg) !important; z-index: 2; }
+        @keyframes paperFloat {
+            0%,100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+            50% { transform: translateY(-3px) rotate(var(--rot, 0deg)); }
+        }
+        .jar-instruction {
+            font-size: 0.9rem;
+            color: var(--rose);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        .jar-note-display {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 800px;
+        }
+        .jar-note {
+            background: #fffaf0;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 4px;
+            padding: 32px 36px;
+            box-shadow: 2px 3px 15px rgba(89,13,34,0.08), inset 0 0 30px rgba(212,165,116,0.06);
+            max-width: 440px;
+            width: 100%;
+            opacity: 0;
+            transform: rotateX(20deg) translateY(20px);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .jar-note.visible {
+            opacity: 1;
+            transform: rotateX(0) translateY(0);
+        }
+        .jar-note::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rose), var(--gold), var(--rose-light));
+            border-radius: 4px 4px 0 0;
+        }
+        .jar-note-number {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
+            font-size: 1.1rem;
             font-weight: 500;
             color: var(--rose);
-            flex-shrink: 0;
-            width: 32px;
-            text-align: center;
-            line-height: 1.4;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
         }
-        .reason-text {
+        .jar-note-text {
             font-size: 1.02rem;
-            line-height: 1.7;
+            line-height: 1.8;
             color: var(--soft-text);
             font-weight: 300;
+            font-style: italic;
+        }
+        .jar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .jar-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(201,24,74,0.2);
+            background: rgba(255,255,255,0.8);
+            color: var(--rose);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .jar-nav-btn:hover { background: var(--rose); color: #fff; }
+        .jar-nav-btn:disabled { opacity: 0.3; cursor: default; }
+        .jar-nav-btn:disabled:hover { background: rgba(255,255,255,0.8); color: var(--rose); }
+        .jar-counter {
+            font-size: 0.85rem;
+            color: var(--rose);
+            letter-spacing: 0.1em;
+            min-width: 60px;
         }
         .whats-next-section { padding: 60px 0 40px; text-align: center; }
         .whats-next-card {
@@ -794,7 +864,8 @@
             .love-page-quote { padding-left: 16px; font-size: 1.15rem; }
             .album-book { width: 280px; height: 360px; }
             .final-card { padding: 44px 28px; }
-            .voice-memo { padding: 14px 20px; }
+            .constellation-container { width: 240px; height: 240px; }
+            .jar-wrapper { width: 230px; height: 320px; }
             .section-wrapper { padding: 0 18px; }
         }
         @media (max-width: 480px) {
@@ -848,19 +919,11 @@
             <h1 class="hero-title">For You</h1>
             <p class="hero-subtitle">A Letter From The Heart</p>
             <div class="hero-heart">❤️</div>
-            <div class="voice-memo" id="voiceMemo" onclick="toggleVoiceMemo()">
-                <div class="voice-memo-btn">
-                    <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
-                </div>
-                <div>
-                    <div class="voice-memo-label">A message for you</div>
-                </div>
-                <div class="voice-memo-bars" id="voiceBars">
-                    <span></span><span></span><span></span><span></span><span></span>
-                </div>
+            <div class="constellation-container" id="constellationContainer">
+                <canvas id="heartConstellation" width="600" height="600"></canvas>
+                <div class="constellation-label">Our stars, our story</div>
             </div>
-            <audio id="voiceAudio" src="voicememo.mp3"></audio>
-            <iframe id="bgMusicFrame" style="display:none;" allow="autoplay"></iframe>
+            <div id="ytPlayerContainer" style="position:fixed;top:-200px;left:-200px;width:1px;height:1px;overflow:hidden;pointer-events:none;"></div>
             <div class="scroll-hint">scroll down ↓</div>
         </section>
 
@@ -993,25 +1056,56 @@
             </div>
         </section>
 
-        <!-- CHAPTER FOUR: REASONS -->
+        <!-- CHAPTER FOUR: JAR OF REASONS -->
         <section class="reasons-section">
             <div class="section-wrapper">
                 <p class="section-label fade-in">Chapter Four</p>
-                <h2 class="section-title fade-in glow-reveal">Reasons I Love You</h2>
-                <div class="reasons-grid">
-                    <div class="reason-card" data-animate><div class="reason-number">1</div><div class="reason-text">Your relationship with God. The way your faith isn't just something you talk about, it's how you move, how you love, how you carry yourself. That foundation you have is one of the things I admire most about you.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">2</div><div class="reason-text">Your goofy side. The random jokes, the faces, the moments where you just let go and be silly. That version of you is my favorite version. Nobody makes me laugh the way you do.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">3</div><div class="reason-text">How deeply you care about the people around you. You don't just say you care, you show it. You check in. You remember the small things. You carry people without them even asking.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">4</div><div class="reason-text">The way you push us to grow closer to God together. You don't just want this relationship to be good, you want it to be rooted in something bigger than us. That means everything to me.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">5</div><div class="reason-text">Your ambition. The master's program, Latham, everything you're building. You don't just dream about things, you go get them. Watching you chase your goals makes me want to match your energy every single day.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">6</div><div class="reason-text">The way you mock people and do those guy facial expressions. I know I shouldn't be laughing as hard as I do but you are genuinely the funniest person I know. You catch everything and your impressions are too accurate.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">7</div><div class="reason-text">How safe you make me feel. Not just physically, but emotionally. You created a space where I don't have to pretend, where I can just be me. That kind of comfort is rare and I never take it for granted.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">8</div><div class="reason-text">You're teaching me to open up. Before you, I kept everything inside. You're patient with me, you don't force it, but you make me feel like it's okay to be vulnerable. That's changed me more than you know.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">9</div><div class="reason-text">The way you love your family. Seeing how you are with your mom, how you show up for the people closest to you. It showed me early on what kind of woman you are and what kind of home we'd build together.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">10</div><div class="reason-text">How you never let me settle. You hold me accountable without tearing me down. You push me to be better in a way that feels like love, not pressure. That balance is something special.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">11</div><div class="reason-text">Your smile. Not the one for pictures. The real one. The one that comes out when you're not even trying. That smile could fix the worst day I've ever had.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">12</div><div class="reason-text">The late night conversations that go on for hours and still feel too short. We can talk about everything and nothing and it always feels like exactly where I'm supposed to be.</div></div>
-                    <div class="reason-card" data-animate><div class="reason-number">13</div><div class="reason-text">You chose me. Out of everyone, through everything, you chose me. And every day I wake up trying to make sure you never regret that decision.</div></div>
+                <h2 class="section-title fade-in glow-reveal">Jar of Reasons I Love You</h2>
+                <div class="jar-container" data-animate>
+                    <div class="jar-wrapper" id="jarWrapper">
+                        <svg class="jar-svg" viewBox="0 0 280 380" fill="none">
+                            <!-- Jar lid -->
+                            <rect x="80" y="20" width="120" height="28" rx="6" fill="url(#lidGrad)" stroke="rgba(180,140,100,0.4)" stroke-width="1"/>
+                            <rect x="90" y="14" width="100" height="10" rx="4" fill="url(#lidTopGrad)"/>
+                            <!-- Jar body -->
+                            <path d="M70 48 Q70 48 70 70 Q60 80 55 100 L50 300 Q50 340 80 355 L200 355 Q230 340 230 300 L225 100 Q220 80 210 70 Q210 48 210 48 Z" fill="url(#jarGrad)" stroke="rgba(201,24,74,0.1)" stroke-width="1.5" opacity="0.88"/>
+                            <!-- Jar shine -->
+                            <path d="M80 70 Q75 90 72 140 L70 260 Q70 280 72 290" stroke="rgba(255,255,255,0.35)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M85 75 Q82 95 80 130" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                            <!-- Jar label -->
+                            <rect x="90" y="170" width="100" height="50" rx="6" fill="rgba(255,250,240,0.9)" stroke="rgba(212,165,116,0.3)" stroke-width="1"/>
+                            <text x="140" y="192" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="11" fill="#c9184a" font-weight="500">Reasons I</text>
+                            <text x="140" y="210" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="11" fill="#c9184a" font-weight="500">Love You</text>
+                            <defs>
+                                <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#d4a574"/>
+                                    <stop offset="100%" stop-color="#b8845a"/>
+                                </linearGradient>
+                                <linearGradient id="lidTopGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#e0b88a"/>
+                                    <stop offset="100%" stop-color="#c99a66"/>
+                                </linearGradient>
+                                <linearGradient id="jarGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="rgba(255,245,247,0.95)"/>
+                                    <stop offset="50%" stop-color="rgba(255,230,235,0.85)"/>
+                                    <stop offset="100%" stop-color="rgba(255,240,243,0.9)"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="jar-papers" id="jarPapers"></div>
+                    </div>
+                    <p class="jar-instruction">Tap the jar to pull out a reason</p>
+                    <div class="jar-note-display">
+                        <div class="jar-note" id="jarNote">
+                            <div class="jar-note-number" id="jarNoteNumber"></div>
+                            <div class="jar-note-text" id="jarNoteText">Tap the jar above to unfold a reason...</div>
+                        </div>
+                    </div>
+                    <div class="jar-nav">
+                        <button class="jar-nav-btn" id="jarPrev" disabled>&#8249;</button>
+                        <span class="jar-counter" id="jarCounter">- / 13</span>
+                        <button class="jar-nav-btn" id="jarNext" disabled>&#8250;</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1290,25 +1384,120 @@
             for (let i = 0; i < 15; i++) setTimeout(() => createFloatingHeart(), i * 60);
         });
 
-        // ─── VOICE MEMO ──────────────────────
-        const voiceAudio = document.getElementById('voiceAudio');
-        const voiceBars = document.getElementById('voiceBars');
-        let voicePlaying = false;
-        function toggleVoiceMemo() {
-            if (voicePlaying) {
-                voiceAudio.pause();
-                voiceBars.classList.remove('playing');
-                voicePlaying = false;
-            } else {
-                voiceAudio.play().catch(() => {});
-                voiceBars.classList.add('playing');
-                voicePlaying = true;
+        // ─── HEART CONSTELLATION ──────────────
+        (function() {
+            const canvas = document.getElementById('heartConstellation');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+            const cx = W / 2, cy = H / 2;
+            const scale = 14;
+
+            // Heart parametric curve points
+            const heartPoints = [];
+            for (let t = 0; t < Math.PI * 2; t += 0.12) {
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                heartPoints.push({ x: cx + x * scale, y: cy + y * scale - 10 });
             }
-        }
-        voiceAudio.addEventListener('ended', () => {
-            voiceBars.classList.remove('playing');
-            voicePlaying = false;
-        });
+
+            // Stars along the heart with twinkling properties
+            const stars = heartPoints.map(p => ({
+                x: p.x + (Math.random() - 0.5) * 8,
+                y: p.y + (Math.random() - 0.5) * 8,
+                r: Math.random() * 1.5 + 1,
+                phase: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.02 + 0.01
+            }));
+
+            // Scattered background stars
+            const bgStars = [];
+            for (let i = 0; i < 60; i++) {
+                bgStars.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    r: Math.random() * 0.8 + 0.3,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: Math.random() * 0.015 + 0.005
+                });
+            }
+
+            let drawProgress = 0;
+            let constellationStarted = false;
+
+            function drawConstellation() {
+                ctx.clearRect(0, 0, W, H);
+
+                // Background stars
+                bgStars.forEach(s => {
+                    const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(s.phase));
+                    s.phase += s.speed;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 200, 220, ${twinkle * 0.4})`;
+                    ctx.fill();
+                });
+
+                // Number of stars to draw based on progress
+                const visibleCount = Math.floor(drawProgress * stars.length);
+
+                // Constellation lines
+                if (visibleCount > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(stars[0].x, stars[0].y);
+                    for (let i = 1; i < visibleCount; i++) {
+                        ctx.lineTo(stars[i].x, stars[i].y);
+                    }
+                    if (visibleCount >= stars.length) ctx.closePath();
+                    ctx.strokeStyle = 'rgba(201, 24, 74, 0.25)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                // Constellation stars
+                for (let i = 0; i < visibleCount; i++) {
+                    const s = stars[i];
+                    const twinkle = 0.5 + 0.5 * Math.abs(Math.sin(s.phase));
+                    s.phase += s.speed;
+
+                    // Glow
+                    const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 6);
+                    grad.addColorStop(0, `rgba(255, 77, 109, ${twinkle * 0.4})`);
+                    grad.addColorStop(1, 'rgba(255, 77, 109, 0)');
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r * 6, 0, Math.PI * 2);
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+
+                    // Star core
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${twinkle})`;
+                    ctx.fill();
+                }
+
+                // Animate drawing progress
+                if (constellationStarted && drawProgress < 1) {
+                    drawProgress += 0.008;
+                    if (drawProgress > 1) drawProgress = 1;
+                }
+
+                requestAnimationFrame(drawConstellation);
+            }
+
+            // Start drawing when constellation becomes visible
+            const constObs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !constellationStarted) {
+                        constellationStarted = true;
+                        constObs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            constObs.observe(canvas);
+
+            drawConstellation();
+        })();
 
         // ─── SCROLL ANIMATIONS ──────────────────
         const observer = new IntersectionObserver((entries) => {
@@ -1363,19 +1552,58 @@
             updateNav();
         })();
 
-        // ─── BACKGROUND MUSIC ──────────────────
+        // ─── BACKGROUND MUSIC (YouTube IFrame API for mobile support) ──
         const musicToggle = document.getElementById('musicToggle');
-        const musicFrame = document.getElementById('bgMusicFrame');
         let musicPlaying = false;
+        let ytPlayer = null;
+        let ytReady = false;
         const ytVideoId = 'qlqJyZg_3-o';
+
+        // Load YouTube IFrame API
+        (function() {
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+        })();
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('ytPlayerContainer', {
+                height: '1',
+                width: '1',
+                videoId: ytVideoId,
+                playerVars: {
+                    autoplay: 0,
+                    loop: 1,
+                    playlist: ytVideoId,
+                    controls: 0,
+                    showinfo: 0,
+                    rel: 0,
+                    modestbranding: 1,
+                    playsinline: 1
+                },
+                events: {
+                    onReady: function() { ytReady = true; },
+                    onStateChange: function(e) {
+                        if (e.data === YT.PlayerState.ENDED) {
+                            ytPlayer.playVideo();
+                        }
+                    }
+                }
+            });
+        }
+
         function startMusic() {
-            musicFrame.src = `https://www.youtube.com/embed/${ytVideoId}?autoplay=1&loop=1&playlist=${ytVideoId}&controls=0&showinfo=0&rel=0&modestbranding=1`;
+            if (ytReady && ytPlayer) {
+                ytPlayer.playVideo();
+            }
             musicPlaying = true;
             musicToggle.classList.add('playing');
             musicToggle.textContent = '🔊';
         }
         function stopMusic() {
-            musicFrame.src = '';
+            if (ytReady && ytPlayer) {
+                ytPlayer.pauseVideo();
+            }
             musicPlaying = false;
             musicToggle.classList.remove('playing');
             musicToggle.textContent = '🎵';
@@ -1426,19 +1654,70 @@
         }, { threshold: 0.5 });
         document.querySelectorAll('.glow-reveal').forEach(el => glowObserver.observe(el));
 
-        // ─── REASON CARDS STAGGER ──────────
-        const reasonObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.querySelectorAll('.reason-card').forEach((card, i) => {
-                        setTimeout(() => card.classList.add('visible'), i * 150);
-                    });
-                    reasonObserver.unobserve(entry.target);
-                }
+        // ─── JAR OF REASONS ──────────────────
+        (function() {
+            const reasons = [
+                "Your relationship with God. The way your faith isn't just something you talk about, it's how you move, how you love, how you carry yourself. That foundation you have is one of the things I admire most about you.",
+                "Your goofy side. The random jokes, the faces, the moments where you just let go and be silly. That version of you is my favorite version. Nobody makes me laugh the way you do.",
+                "How deeply you care about the people around you. You don't just say you care, you show it. You check in. You remember the small things. You carry people without them even asking.",
+                "The way you push us to grow closer to God together. You don't just want this relationship to be good, you want it to be rooted in something bigger than us. That means everything to me.",
+                "Your ambition. The master's program, Latham, everything you're building. You don't just dream about things, you go get them. Watching you chase your goals makes me want to match your energy every single day.",
+                "The way you mock people and do those guy facial expressions. I know I shouldn't be laughing as hard as I do but you are genuinely the funniest person I know. You catch everything and your impressions are too accurate.",
+                "How safe you make me feel. Not just physically, but emotionally. You created a space where I don't have to pretend, where I can just be me. That kind of comfort is rare and I never take it for granted.",
+                "You're teaching me to open up. Before you, I kept everything inside. You're patient with me, you don't force it, but you make me feel like it's okay to be vulnerable. That's changed me more than you know.",
+                "The way you love your family. Seeing how you are with your mom, how you show up for the people closest to you. It showed me early on what kind of woman you are and what kind of home we'd build together.",
+                "How you never let me settle. You hold me accountable without tearing me down. You push me to be better in a way that feels like love, not pressure. That balance is something special.",
+                "Your smile. Not the one for pictures. The real one. The one that comes out when you're not even trying. That smile could fix the worst day I've ever had.",
+                "The late night conversations that go on for hours and still feel too short. We can talk about everything and nothing and it always feels like exactly where I'm supposed to be.",
+                "You chose me. Out of everyone, through everything, you chose me. And every day I wake up trying to make sure you never regret that decision."
+            ];
+
+            const paperColors = ['#ffccd5','#ffd6de','#ffe0e6','#fff0f3','#ffc2d1','#ffb3c6','#ffdde4','#fce4ec','#f8bbd0','#f48fb1','#ffcdd2','#ef9a9a','#ffebee'];
+            const jarPapers = document.getElementById('jarPapers');
+            const jarNote = document.getElementById('jarNote');
+            const jarNoteNumber = document.getElementById('jarNoteNumber');
+            const jarNoteText = document.getElementById('jarNoteText');
+            const jarCounter = document.getElementById('jarCounter');
+            const jarPrev = document.getElementById('jarPrev');
+            const jarNext = document.getElementById('jarNext');
+            const jarWrapper = document.getElementById('jarWrapper');
+            let currentReason = -1;
+
+            // Create paper slips inside the jar
+            reasons.forEach((_, i) => {
+                const paper = document.createElement('div');
+                paper.className = 'jar-paper';
+                paper.style.background = paperColors[i % paperColors.length];
+                paper.style.setProperty('--rot', ((Math.random() - 0.5) * 16) + 'deg');
+                paper.addEventListener('click', (e) => { e.stopPropagation(); showReason(i); });
+                jarPapers.appendChild(paper);
             });
-        }, { threshold: 0.1 });
-        const reasonsGrid = document.querySelector('.reasons-grid');
-        if (reasonsGrid) reasonObserver.observe(reasonsGrid);
+
+            function showReason(index) {
+                currentReason = index;
+                jarNote.classList.remove('visible');
+                setTimeout(() => {
+                    jarNoteNumber.textContent = 'Reason #' + (index + 1);
+                    jarNoteText.textContent = reasons[index];
+                    jarCounter.textContent = (index + 1) + ' / ' + reasons.length;
+                    jarNote.classList.add('visible');
+                    jarPrev.disabled = index <= 0;
+                    jarNext.disabled = index >= reasons.length - 1;
+                }, 200);
+            }
+
+            jarWrapper.addEventListener('click', () => {
+                const next = currentReason < reasons.length - 1 ? currentReason + 1 : 0;
+                showReason(next);
+            });
+
+            jarPrev.addEventListener('click', () => {
+                if (currentReason > 0) showReason(currentReason - 1);
+            });
+            jarNext.addEventListener('click', () => {
+                if (currentReason < reasons.length - 1) showReason(currentReason + 1);
+            });
+        })();
 
         // ─── TOUCH HEARTS ──────────────────
         document.addEventListener('touchstart', (e) => {
