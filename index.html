@@ -349,73 +349,56 @@
         .constellation-adjective-popup.show {
             animation: adjectivePop 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        .constellation-reveal {
+        .constellation-carousel {
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 360px;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            opacity: 0;
             pointer-events: none;
-            transition: opacity 1s ease 0.5s;
-            z-index: 25;
-            padding-top: 380px;
+            z-index: 26;
+            opacity: 0;
+            transition: opacity 0.8s ease;
         }
-        .constellation-reveal.visible {
+        .constellation-carousel.active {
             opacity: 1;
-            pointer-events: auto;
         }
-        .constellation-reveal-heart {
-            font-size: 2.5rem;
-            color: var(--rose);
-            margin-bottom: 12px;
-            animation: heartFloat 2s ease-in-out infinite;
-        }
-        .constellation-reveal-title {
+        .carousel-word {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
+            font-size: 2rem;
+            font-weight: 600;
             font-style: italic;
-            color: var(--rose-light);
-            margin-bottom: 18px;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255,77,109,0.7), 0 0 60px rgba(255,77,109,0.3);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             letter-spacing: 0.05em;
         }
-        .constellation-reveal-words {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .reveal-word {
-            background: linear-gradient(135deg, rgba(201,24,74,0.15), rgba(255,117,143,0.1));
-            border: 1px solid rgba(255,77,109,0.2);
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-style: italic;
-            color: var(--rose-light);
-            opacity: 0;
-            transform: translateY(10px) scale(0.8);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .reveal-word.pop {
+        .carousel-word.visible {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: scale(1);
         }
-        .constellation-reveal-msg {
+        .carousel-note {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.15rem;
+            font-size: 0.82rem;
             font-style: italic;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 200, 215, 0.7);
+            max-width: 240px;
+            line-height: 1.5;
             margin-top: 8px;
             opacity: 0;
-            transition: opacity 1s ease;
+            transition: opacity 0.5s ease 0.3s;
         }
-        .constellation-reveal.visible .constellation-reveal-msg {
+        .carousel-note.visible {
             opacity: 1;
-            transition-delay: 3s;
         }
         .scroll-hint {
             position: absolute;
@@ -1126,7 +1109,9 @@
             .album-book { width: 280px; height: 360px; }
             .final-card { padding: 44px 28px; }
             .constellation-orb { width: 280px; height: 280px; }
-            .constellation-memory { width: 260px; }
+            .constellation-carousel { width: 280px; height: 280px; }
+            .carousel-word { font-size: 1.6rem; }
+            .carousel-note { font-size: 0.75rem; max-width: 200px; }
             .jar-stage { width: 220px; height: 310px; }
             .jar-note-body { padding: 22px 20px 26px; }
             .jar-note-body::before { font-size: 3rem; left: 10px; }
@@ -1194,11 +1179,9 @@
                 <div class="constellation-label">Connect the stars to reveal a heart</div>
                 <div class="constellation-hint" id="constellationHint">tap each star to draw the next line</div>
                 <div class="constellation-adjective-popup" id="adjectivePopup"></div>
-                <div class="constellation-reveal" id="constellationReveal">
-                    <div class="constellation-reveal-heart">&#10084;</div>
-                    <div class="constellation-reveal-title">Andrea, you are...</div>
-                    <div class="constellation-reveal-words" id="revealWords"></div>
-                    <div class="constellation-reveal-msg">Every star in my sky is you.</div>
+                <div class="constellation-carousel" id="constellationCarousel">
+                    <div class="carousel-word" id="carouselWord"></div>
+                    <div class="carousel-note" id="carouselNote"></div>
                 </div>
             </div>
             <div id="ytPlayerContainer" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
@@ -1698,8 +1681,9 @@
             const progressText = document.getElementById('constellationProgressText');
             const hintEl = document.getElementById('constellationHint');
             const adjectivePopup = document.getElementById('adjectivePopup');
-            const revealPanel = document.getElementById('constellationReveal');
-            const revealWords = document.getElementById('revealWords');
+            const carousel = document.getElementById('constellationCarousel');
+            const carouselWord = document.getElementById('carouselWord');
+            const carouselNote = document.getElementById('carouselNote');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const W = canvas.width, H = canvas.height;
@@ -2038,23 +2022,39 @@
                     heartComplete = true;
                     orb.classList.add('complete');
                     hintEl.style.opacity = '0';
-                    // Trigger the big reveal after a short pause
+                    // Update the label
+                    const labelEl = document.querySelector('.constellation-label');
+                    if (labelEl) labelEl.textContent = 'Andrea, you are...';
+                    // Trigger the carousel after a short pause
                     setTimeout(triggerReveal, 1200);
                 }
             }
 
             function triggerReveal() {
-                revealPanel.classList.add('visible');
-                // Populate and stagger-animate the word pills
-                revealWords.innerHTML = '';
-                starWords.forEach((sw, i) => {
-                    const pill = document.createElement('span');
-                    pill.className = 'reveal-word';
-                    pill.textContent = sw.word;
-                    pill.title = sw.note;
-                    revealWords.appendChild(pill);
-                    setTimeout(() => pill.classList.add('pop'), 150 * i);
-                });
+                carousel.classList.add('active');
+                // Cycle through each adjective inside the orb, then end with the final message
+                const sequence = [...starWords];
+                let idx = 0;
+                function showNext() {
+                    // Fade out current
+                    carouselWord.classList.remove('visible');
+                    carouselNote.classList.remove('visible');
+                    setTimeout(() => {
+                        if (idx < sequence.length) {
+                            carouselWord.textContent = sequence[idx].word;
+                            carouselNote.textContent = sequence[idx].note;
+                            carouselWord.classList.add('visible');
+                            carouselNote.classList.add('visible');
+                            idx++;
+                            setTimeout(showNext, 2800);
+                        } else {
+                            // Loop back to beginning
+                            idx = 0;
+                            showNext();
+                        }
+                    }, 500);
+                }
+                showNext();
             }
 
             canvas.addEventListener('mousemove', (e) => {
